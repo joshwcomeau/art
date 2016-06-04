@@ -15,19 +15,43 @@ export default function createCanvas(el) {
       // Set the background color
       canvas.style.backgroundColor = settings.backgroundColor;
 
+      drawShape = drawShape.bind(null, context);
+
+      // Draw our shapes.
+      // TODO: Support more than just polygons
+      context.beginPath();
+
+      shapes.forEach(drawShape);
+
+      context.strokeStyle = "#bada55";
+      context.fillStyle = "#bada55";
+      context.lineWidth = 2;
+      context.stroke();
+
     }
   }
 }
 
 
-function scaleCanvas(canvas, ctx) {
+function drawShape(context, { center: [x, y], points, radius, alpha0 = 0 }) {
+  console.log("Call with", arguments)
+  //points: number of points (or number of sides for polygons)
+  //angle0: initial angle (clockwise), by default, stars and polygons are 'pointing' up
+  for (let i = 0; i <= points; i++) {
+    const angle = i * 2 * Math.PI / points - Math.PI / 2 + alpha0;
+    context.lineTo(x + radius * Math.cos(angle), y + radius * Math.sin(angle));
+  }
+}
+
+
+function scaleCanvas(canvas, context) {
   // This ensures canvas looks crisp on retina displays, where there are
   // in fact 4 on-screen pixels for every 1 calculated pixel.
-  const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
-                            ctx.mozBackingStorePixelRatio ||
-                            ctx.msBackingStorePixelRatio ||
-                            ctx.oBackingStorePixelRatio ||
-                            ctx.backingStorePixelRatio || 1;
+  const backingStoreRatio = context.webkitBackingStorePixelRatio ||
+                            context.mozBackingStorePixelRatio ||
+                            context.msBackingStorePixelRatio ||
+                            context.oBackingStorePixelRatio ||
+                            context.backingStorePixelRatio || 1;
 
   const ratio = (window.devicePixelRatio || 1) / backingStoreRatio;
 
@@ -39,6 +63,6 @@ function scaleCanvas(canvas, ctx) {
     canvas.height *= ratio;
     /* eslint-enable */
 
-    ctx.scale(ratio, ratio);
+    context.scale(ratio, ratio);
   }
 }
