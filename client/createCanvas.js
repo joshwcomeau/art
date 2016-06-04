@@ -19,27 +19,26 @@ export default function createCanvas(el) {
 
       // Draw our shapes.
       // TODO: Support more than just polygons
-      context.beginPath();
+      shapes.forEach(shape => {
+        console.log("Shape", shape)
+        context.beginPath();
+        drawShape(shape);
+        context.fillStyle = shape.fill;
+        context.fill();
+      });
 
-      shapes.forEach(drawShape);
-
-      context.strokeStyle = "#bada55";
-      context.fillStyle = "#bada55";
-      context.lineWidth = 2;
-      context.stroke();
 
     }
   }
 }
 
 
-function drawShape(context, { center: [x, y], points, radius, alpha0 = 0 }) {
-  console.log("Call with", arguments)
+function drawShape(context, { center: [x, y], points, radius, angle = 0 }) {
   //points: number of points (or number of sides for polygons)
-  //angle0: initial angle (clockwise), by default, stars and polygons are 'pointing' up
+  //angle: initial angle (clockwise), by default, stars and polygons are 'pointing' up
   for (let i = 0; i <= points; i++) {
-    const angle = i * 2 * Math.PI / points - Math.PI / 2 + alpha0;
-    context.lineTo(x + radius * Math.cos(angle), y + radius * Math.sin(angle));
+    const a = i * 2 * Math.PI / points - Math.PI / 2 + angle;
+    context.lineTo(x + radius * Math.cos(a), y + radius * Math.sin(a));
   }
 }
 

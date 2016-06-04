@@ -15,8 +15,10 @@ import {
 
 
 export default function generate(seed = createNewSeed()) {
+  const random = createRandomNumberGenerator(seed);
+
   const settings = {
-    numOfPolygons: 4,
+    numOfPolygons: random(2, 25),
     backgroundColor: '#69D2E7',
     palette: [
       '#A7DBD8',
@@ -26,7 +28,15 @@ export default function generate(seed = createNewSeed()) {
     ],
   };
 
-  const random = createRandomNumberGenerator(seed);
+  const acceptableAngles = [
+    null,
+    0,
+    0,
+    Math.PI,
+    Math.PI * 0.5,
+    2
+  ];
+
 
   const shapes = [];
 
@@ -37,8 +47,9 @@ export default function generate(seed = createNewSeed()) {
       shape: 'polygon',
       fill: color,
       radius: random(10, 100),
-      points: random(3, 8),
-      center: [random(0, 500), random(0, 400)],
+      points: Math.round(random(3, 8)),
+      center: [random(0, 800), random(0, 600)],
+      angle: acceptableAngles[Math.round(random(0, 5))],
     });
   }
 
