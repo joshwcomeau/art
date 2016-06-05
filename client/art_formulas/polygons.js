@@ -11,21 +11,23 @@ import sample from 'lodash/sample';
 import {
   createRandomNumberGenerator,
   createNewSeed,
+  shuffle,
 } from 'utils';
+import palettes from 'palettes';
 
 
 export default function generate(seed = createNewSeed()) {
   const random = createRandomNumberGenerator(seed);
 
+  const selectedPalette = palettes[random(0, palettes.length - 1)];
+  console.log("Palette", selectedPalette, palettes)
+  const [backgroundColor, ...palette] = shuffle(selectedPalette, random);
+
+
   const settings = {
     numOfPolygons: random(2, 25),
-    backgroundColor: '#69D2E7',
-    palette: [
-      '#A7DBD8',
-      '#E0E4CC',
-      '#F38630',
-      '#FA6900',
-    ],
+    backgroundColor,
+    palette,
   };
 
   const acceptableAngles = [
@@ -47,9 +49,9 @@ export default function generate(seed = createNewSeed()) {
       shape: 'polygon',
       fill: color,
       radius: random(10, 100),
-      points: Math.round(random(3, 8)),
+      points: random(3, 8, false),
       center: [random(0, 800), random(0, 600)],
-      angle: acceptableAngles[Math.round(random(0, 5))],
+      angle: acceptableAngles[random(0, 5)],
     });
   }
 
